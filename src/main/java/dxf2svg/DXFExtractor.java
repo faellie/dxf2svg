@@ -1,5 +1,6 @@
 package dxf2svg;
 
+import dxf2svg.utils.PolylineUtils;
 import org.kabeja.dxf.*;
 import org.kabeja.dxf.helpers.DXFUtils;
 import org.kabeja.dxf.helpers.Point;
@@ -43,6 +44,7 @@ public class DXFExtractor {
             //work with the polylines
             doStuff(plines);
             cleanDups(plines);
+            PolylineUtils.cleanOrphan(plines);
             System.out.println("After cleandup ==============================");
             doStuff(plines);
             List orderedLines = reorder(plines);
@@ -111,12 +113,12 @@ public class DXFExtractor {
         System.out.println("<path d=\"" + lSVGPath + "\" stroke=\"red\" />");*/
     }
 
+    //move to PolylineUtils
     private static void cleanDups(List<DXFPolyline> plines) {
         //clean for exmaple:
         /** The first line is not needed
          M0 0 L10 10
          M0 0 L10 20
-
          Or
          M0 0 L10 10
          M10 10 L0 0
@@ -143,6 +145,7 @@ public class DXFExtractor {
         return;
     }
 
+    //move to PolylineUtils
     private static boolean isDup(DXFPolyline pl, DXFPolyline lNext) {
         Point plstart = pl.getVertex(0).getPoint();
         Point plend = pl.getVertex(pl.getVertexCount() - 1).getPoint();
@@ -152,7 +155,7 @@ public class DXFExtractor {
         return (DXFUtils.equals(plstart, lNextstart, DXFConstants.POINT_CONNECTION_RADIUS) && DXFUtils.equals(plend, lNextEnd, DXFConstants.POINT_CONNECTION_RADIUS)) ||
                 (DXFUtils.equals(plstart, lNextEnd, DXFConstants.POINT_CONNECTION_RADIUS) && DXFUtils.equals(plend, lNextstart, DXFConstants.POINT_CONNECTION_RADIUS)) ;
     }
-
+    //move to PolylineUtils
     private static List reorder(List<DXFPolyline> plines) {
         List<DXFPolyline> lOrderedList = new ArrayList<DXFPolyline>();
         //take the first Vertax out
@@ -185,6 +188,7 @@ public class DXFExtractor {
                         lNextPl = lPl;
                     } else {
                         //this is a dup seems
+                        //so we have two possibility lNextPl and lPl
                         System.out.println("Found Dup " +
                                 svgPolylineGenerator.getSVGPath(lNextPl) + "\n\t\t\t\t" + svgPolylineGenerator.getSVGPath(lPl));
                         //todo use the big one
@@ -222,6 +226,7 @@ public class DXFExtractor {
 
     }
 
+    //move to PolylineUtils
     private static void normalizePlines(List<DXFPolyline> aInPolyLines) {
         double min_x= 0.0;
         double min_y = 0.0;
@@ -269,14 +274,36 @@ public class DXFExtractor {
         /*String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/107834-4.dxf";
         String lLayId = "107834-4ROU_GBR";*/
 
-        /*String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/128873-1.dxf";
-        String lLayId = "128873-1ROU_GBR";*/
+        //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/128873-1.dxf";
+        //String lLayId = "128873-1ROU_GBR";
 
-        /*String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/038683-1.dxf";
-        String lLayId = "038683-1ROU_GBR";
-*/
-        String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/107824-1.dxf";
-        String lLayId = "107824-1ROU_GBR";
+        //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/108835-1.dxf";
+        //String lLayId = "108835-1ROU_GBR";
+
+        //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/108835-1.dxf";
+        //String lLayId = "108835-1ROU_GBR";
+
+        //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/ro1.dxf";
+        //String lLayId = "22RO1_GBR";
+
+        //String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/107824-1.dxf";  //this is good little little curved shap
+        //String lLayId = "107824-1ROU_GBR";
+
+
+        //String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/087774-1.dxf";     // this is good, one square
+        //String lLayId = "087774-1ROU_GBR";
+
+        //String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/087782-1.dxf";     // this is good, one square but need a bit fix (two point was off by 0.01)
+        //String lLayId = "087782-1ROU_GBR";
+
+        //String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/038683-1.dxf";     // this is good, one square
+        //String lLayId = "038683-1ROU_GBR";
+
+        //String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/108831-1.dxf";
+        //String lLayId = "108831-1ROU_GBR";
+
+        String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/108831-2.dxf";
+        String lLayId = "108831-2ROU_GBR";
 
         InputStream lInputStream = null;
         try {

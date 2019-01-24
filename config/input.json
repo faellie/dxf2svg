@@ -1,0 +1,32 @@
+{
+  "width": 550,
+  "hight":550,
+  "parts" :[
+    {
+      "filename": "/opt/LI/nesting/image/shapes/2/dxf/107834-4.dxf",
+      "colorcode": "red",
+      "dups": 2,
+      "layer":"107834-4ROU_GBR"
+    },
+    {
+      "filename": "/opt/LI/nesting/image/shapes/1/dxf/107824-1.dxf",
+      "colorcode": "green",
+      "dups": 8,
+      "layer":"107824-1ROU_GBR"
+    },
+    {
+      "filename": "/opt/LI/nesting/image/shapes/1/dxf/038683-1.dxf",
+      "colorcode": "yellow",
+      "dups": 5,
+      "layer":"038683-1ROU_GBR"
+    },
+
+    {
+      "filename": "/opt/LI/nesting/image/shapes/2/dxf/ro1.dxf",
+      "colorcode": "green",
+      "dups": 1,
+      "layer":"22RO1_GBR"
+    }
+  ]
+}
+

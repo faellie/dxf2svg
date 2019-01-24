@@ -1,0 +1,25 @@
+*.class
+
+build/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+
+#Intellij
+*.iml
+*.ipr
+*.iws
+.idea
+*.diff
+
+#eclipse
+.classpath
+.project
+.settings
+.gradlecaches
+
+.gradle
+

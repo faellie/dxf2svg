@@ -7,6 +7,9 @@ build/
 *.war
 *.ear
 
+# Logs
+logs
+*.log
 
 #Intellij
 *.iml

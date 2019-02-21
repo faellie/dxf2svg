@@ -7,14 +7,23 @@ package dxf2svg.utils;
 import dxf2svg.model.Bound;
 import dxf2svg.model.Config;
 import dxf2svg.model.Orphan;
+import dxf2svg.model.PartConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.kabeja.dxf.DXFConstants;
+import org.kabeja.dxf.DXFDocument;
+import org.kabeja.dxf.DXFLayer;
 import org.kabeja.dxf.DXFPolyline;
 import org.kabeja.dxf.helpers.DXFUtils;
 import org.kabeja.dxf.helpers.Point;
+import org.kabeja.parser.DXFParser;
+import org.kabeja.parser.ParseException;
+import org.kabeja.parser.Parser;
+import org.kabeja.parser.ParserBuilder;
 import org.kabeja.svg.generators.SVGPolylineGenerator;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -232,10 +241,12 @@ public class PolylineUtils {
         return;
     }
 
+    //use is closed instead
     private static boolean iSelfClosed(DXFPolyline aInPl) {
+
         Point startP = aInPl.getVertex(0).getPoint();
         Point endP = aInPl.getVertex(aInPl.getVertexCount() - 1).getPoint();
-        return (DXFUtils.equals(startP, endP, DXFConstants.POINT_CONNECTION_RADIUS));
+        return aInPl.isClosed() || (DXFUtils.equals(startP, endP, DXFConstants.POINT_CONNECTION_RADIUS));
     }
 
     public static boolean isDup(DXFPolyline pl, DXFPolyline lNext) {
@@ -249,6 +260,58 @@ public class PolylineUtils {
     }
 
 
+    public static ArrayList<String> convertFileToSvgStr(String aInFileName, Bound aInBound) {
+        ArrayList<String> lines = new ArrayList<String>();
+        PartConfig lPartConfig = new PartConfig();
+        lPartConfig.setFilename(aInFileName);
+        lPartConfig.setColorcode("red");
+        lPartConfig.setDups(1);
+        lPartConfig.setLayer(CommonUtils.fileNameToLayer(aInFileName));
+        String lDxfFileName = lPartConfig.getFilename();
+        Parser parser = ParserBuilder.createDefaultParser();
+        FileInputStream lInputStream = null;
+        try {
+            lInputStream = new FileInputStream(lDxfFileName);
+            parser.parse(lInputStream, DXFParser.DEFAULT_ENCODING);
+        } catch (FileNotFoundException e) {
+            System.out.println("Failed to open file. " + e);
+            return lines;
+        } catch (ParseException e) {
+            System.out.println("Failed to parse file. " + e);
+            return lines;
+        }
+
+        //get the document and the layer
+        DXFDocument doc = parser.getDocument();
+        DXFLayer layer = doc.getDXFLayer(lPartConfig.getLayer());
+
+        //get all polylines from the layer
+        List plines = layer.getDXFEntities(DXFConstants.ENTITY_TYPE_POLYLINE);
+        PolylineUtils.cleanDups(plines);
+        PolylineUtils.cleanOrphan(plines);
+        PolylineUtils.normalizePlines(plines, aInBound);
+        List lOrederedPl = PolylineUtils.reorder(plines);
+        addPlToArray(lOrederedPl, lines, lPartConfig);
+        aInBound.setMaxX(getBound(lOrederedPl).getMaxX());
+        aInBound.setMaxY(getBound(lOrederedPl).getMaxY());
+        return lines;
+    }
 
 
+
+    private static void addPlToArray(List<DXFPolyline> aInPlList, ArrayList<String> aInLines, PartConfig aInPartConfig) {
+        boolean isFirst = true;
+        aInLines.add("<path id=\"" + aInPartConfig.getLayer() + "\" d = \"");
+        for(DXFPolyline pl : aInPlList) {
+            String lSVGPath = svgPolylineGenerator.getSVGPath(pl);
+            if(isFirst) {
+                isFirst = false;
+            } else {
+                lSVGPath = lSVGPath.replaceFirst("M", "L");
+            }
+            aInLines.add(lSVGPath + "\n");
+        }
+        aInLines.add("z \" stroke=\"" + aInPartConfig.getColorcode() +  " \" fill = \"none\" />");
+        return;
+    }
 }

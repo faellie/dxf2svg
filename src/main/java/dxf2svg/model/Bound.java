@@ -23,7 +23,12 @@ public class Bound {
     @JsonProperty(value = "maxY")
     private int maxY;
 
-
+    public Bound() {
+        minX = 0;
+        minY = 0;
+        maxX = 0;
+        maxY = 0;
+    }
 
     public String toString() {
         ObjectMapper objectMapper = new ObjectMapper();

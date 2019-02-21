@@ -31,7 +31,8 @@ public class DXFsToSvg {
     private static Bound bound = new Bound();
 
     public static void main(String[] args) {
-        String inputFile = "/opt/LI/nesting/dxf2svg/config/input1.json";
+        //String inputFile = "/opt/LI/nesting/dxf2svg/config/input1.json";
+        String inputFile = "/opt/tmp/test";
         if(args.length != 0) {
             inputFile = args[0];
         }
@@ -49,6 +50,11 @@ public class DXFsToSvg {
             return;
         }
         processHeader();
+        //add hte mother board for fitting
+        //writer.println("<path id=\"mainboard\" d = \"\n" +
+        //        "M 0 0 L 600 10 L 600 800 L 10 800 z \" stroke=\"green \" fill = \"none\" />\n");
+        //bound.setMaxX(810);
+        //bound.setMaxY(810);
         for(PartConfig lPartConfig : lConfig.getParts()) {
             processParts(lPartConfig);
         }

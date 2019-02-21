@@ -39,7 +39,7 @@ public class DXFExtractor {
             //plines.sort(new MyComparator());
             //plines = reorder(plines);
             //normalize polylines
-            normalizePlines(plines);
+            //normalizePlines(plines);
 
             //work with the polylines
             doStuff(plines);
@@ -271,14 +271,12 @@ public class DXFExtractor {
     }
 
     public static void main(String[] args) {
-        /*String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/107834-4.dxf";
-        String lLayId = "107834-4ROU_GBR";*/
+        //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/107834-4.dxf";
+        //String lLayId = "107834-4ROU_GBR";
 
         //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/128873-1.dxf";
         //String lLayId = "128873-1ROU_GBR";
 
-        //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/108835-1.dxf";
-        //String lLayId = "108835-1ROU_GBR";
 
         //String lFileName = "/opt/LI/nesting/image/shapes/2/dxf/108835-1.dxf";
         //String lLayId = "108835-1ROU_GBR";
@@ -302,9 +300,14 @@ public class DXFExtractor {
         //String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/108831-1.dxf";
         //String lLayId = "108831-1ROU_GBR";
 
-        String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/108831-2.dxf";
-        String lLayId = "108831-2ROU_GBR";
+        //String lFileName = "/opt/LI/nesting/image/shapes/1/dxf/108831-2.dxf";
+        //String lLayId = "108831-2ROU_GBR";
 
+        //String lFileName = "/opt/LI/nesting/image/20190125/dxf/028129-1.dxf";     // this is good, one square
+        //String lLayId = "028129-1ROU1_GBR";
+
+        String lFileName = "/opt/LI/nesting/image/20190125/dxf/058723-1.dxf";     // this is good, one square
+        String lLayId = "058723-1ROU1_GBR";
         InputStream lInputStream = null;
         try {
             lInputStream = new FileInputStream(lFileName);
